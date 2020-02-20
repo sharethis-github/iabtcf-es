@@ -5,7 +5,8 @@ module.exports = [
 	{
     
     entry: {
-			'cmpapi': './lib/index.js'
+      'cmpapi': './modules/cmpapi/lib/index.js',
+      'stub': './modules/stub/lib/stub.js'
 		},
     
     output: {

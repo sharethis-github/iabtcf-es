@@ -18,6 +18,7 @@
     "bump": "./bin/create-version",
     "deploy": "./bin/publish-version",
     "build": "yarn workspaces run build",
+    "bundle": "webpack --progress",
     "docs": "yarn workspace @iabtcf/core run docs && yarn workspace @iabtcf/cmpapi run docs",
     "tidy": "rm -rf modules/**/lib coverage modules/**/coverage .nyc_output modules/**/.nyc_output modules/**/*.log",
     "clean": "rm -rf node_modules modules/**/node_modules && yarn run tidy",
@@ -56,7 +57,12 @@
     "gdpr"
   ],
   "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "babel-loader": "^8.0.6",
     "json": "^9.0.6",
-    "mocha": "6"
+    "mocha": "6",
+    "promise-polyfill": "^8.1.3",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11"
   }
 }
