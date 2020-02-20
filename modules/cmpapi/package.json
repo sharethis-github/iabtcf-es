@@ -14,7 +14,7 @@
     "docs": "typedoc --ignoreCompilerErrors --tsconfig ./tsconfig.json  src",
     "prepack": "yarn run build",
     "build": "../build",
-    "bundle": "NODE_ENV=production webpack --progress",
+    "bundle": "webpack --progress",
     "lint": "eslint `find test src -name '*.ts'`",
     "lint:fix": "yarn run lint -- --fix",
     "debug": "ndb yarn test --no-timeouts",
