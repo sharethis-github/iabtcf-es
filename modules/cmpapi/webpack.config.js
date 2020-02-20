@@ -33,9 +33,7 @@ module.exports = [
         }
       ]
     },
-  
-    stats: { colors: true },
-  
+    
     node: {
       global: true,
       process: false,
@@ -50,10 +48,6 @@ module.exports = [
     },
 
 		plugins: [
-			new webpack.NoEmitOnErrorsPlugin(),
-			new webpack.DefinePlugin({
-				'process.env.NODE_ENV': JSON.stringify('production')
-			}),
 			new webpack.ProvidePlugin({
 				'Promise': 'promise-polyfill'
       })
