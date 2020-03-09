@@ -120,14 +120,17 @@ export class CmpApiModel {
       this.gdprApplies = true;
       this.displayStatus = DisplayStatus.HIDDEN;
 
-      // Have we set a TCModel before?
-      if (this.tcModel_ !== undefined) {
+      switch (this.eventStatus) {
 
-        this.eventStatus = EventStatus.USER_ACTION_COMPLETE;
-
-      } else {
-
-        this.eventStatus = EventStatus.TC_LOADED;
+        case undefined:
+          this.eventStatus = EventStatus.TC_LOADED;
+          break;
+        case EventStatus.TC_LOADED:
+          this.eventStatus = EventStatus.CMP_UI_SHOWN;
+          break;
+        case EventStatus.CMP_UI_SHOWN:
+          this.eventStatus = EventStatus.USER_ACTION_COMPLETE;
+          break;
 
       }
 
@@ -193,14 +196,14 @@ export class CmpApiModel {
     retr = (retr && this.isVector(subject.vendorsAllowed));
     retr = (retr && this.isVector(subject.vendorsDisclosed));
     retr = (retr && this.isVector(subject.purposeConsents));
-    retr = (retr && this.isVector(subject.purposeLegitimateInterest));
+    retr = (retr && this.isVector(subject.purposeLegitimateInterests));
     retr = (retr && this.isVector(subject.vendorConsents));
-    retr = (retr && this.isVector(subject.vendorLegitimateInterest));
+    retr = (retr && this.isVector(subject.vendorLegitimateInterests));
     retr = (retr && this.isVector(subject.specialFeatureOptIns));
     retr = (retr && this.isVector(subject.publisherConsents));
-    retr = (retr && this.isVector(subject.publisherLegitimateInterest));
+    retr = (retr && this.isVector(subject.publisherLegitimateInterests));
     retr = (retr && this.isVector(subject.publisherCustomConsents));
-    retr = (retr && this.isVector(subject.publisherCustomLegitimateInterest));
+    retr = (retr && this.isVector(subject.publisherCustomLegitimateInterests));
     retr = (retr && this.isPurposeRestrictionVector(subject.publisherRestrictions));
 
     return retr;

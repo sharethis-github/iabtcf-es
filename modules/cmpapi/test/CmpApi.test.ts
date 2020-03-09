@@ -8,20 +8,7 @@ import {TCFCommands} from '../src/command/TCFCommands';
 import {expect} from 'chai';
 import {makeRandomInt, TCModelFactory, TCStringFactory} from '@iabtcf/testing';
 import {TCDataToTCModel} from './TCDataToTCModel';
-
-// eslint-disable-next-line max-len
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, no-unused-vars, @typescript-eslint/no-var-requires */
-declare global {
-  interface Window {
-    __tcfapi: (
-      command: any,
-      version: any,
-      callback: (response?: any, success?: any) => void,
-      param?: any
-    ) => void;
-
-  }
-}
+import * as stub from '@iabtcf/stub';
 
 const API_FUNCTION_NAME = '__tcfapi';
 const API_VERSION = 2;
@@ -55,7 +42,7 @@ describe('CmpApi', (): void => {
 
   beforeEach((): void => {
 
-    require('@iabtcf/stub')();
+    stub.default();
 
   });
   afterEach((): void => {
@@ -77,7 +64,7 @@ describe('CmpApi', (): void => {
       expect(ping.cmpStatus, 'ping.cmpStatus with stub').to.equal('stub');
       expect(ping.displayStatus, 'ping.displayStatus with stub').to.be.undefined;
       expect(ping.gvlVersion, 'ping.gvlVersion with stub').to.be.undefined;
-      expect(ping.apiVersion, 'ping.apiVersion with stub').to.equal('2');
+      expect(ping.apiVersion, 'ping.apiVersion with stub').to.be.undefined;
 
     });
 
@@ -311,7 +298,7 @@ describe('CmpApi', (): void => {
     const commandName = 'superRadCommand';
     const passParam = true;
     const cmpApi = getCmpApi({
-      [commandName]: (callback: (...params) => void, param?: any): void => {
+      [commandName]: (callback: (...params) => void, param: boolean): void => {
 
         expect(callback, 'callback').to.be.a('function');
         expect(param, 'param').to.be.a('boolean');
@@ -329,6 +316,42 @@ describe('CmpApi', (): void => {
       done();
 
     }, passParam);
+
+  });
+
+  it('should call a custom command through the page interface with multiple parameters', (done: () => void): void => {
+
+    const commandName = 'superRadCommand';
+    const passParam = true;
+    const passParam2 = 'banana';
+    const passParam3 = 'orange';
+    const cmpApi = getCmpApi({
+      [commandName]: (callback: (...params) => void, param: boolean, param2: string, param3: string): void => {
+
+        expect(callback, 'callback').to.be.a('function');
+        expect(param, 'param').to.be.a('boolean');
+        expect(param, 'param').to.equal(passParam);
+        expect(param2, 'param2').to.be.a('string');
+        expect(param2, 'param2').to.equal(passParam2);
+        expect(param3, 'param3').to.be.a('string');
+        expect(param3, 'param3').to.equal(passParam3);
+
+        callback(param, param2, param3);
+
+      },
+
+    });
+    window[API_FUNCTION_NAME](commandName, 2, (param: boolean, param2: string, param3: string): void => {
+
+      expect(param, 'param').to.be.a('boolean');
+      expect(param, 'param').to.equal(passParam);
+      expect(param2, 'param2').to.be.a('string');
+      expect(param2, 'param2').to.equal(passParam2);
+      expect(param3, 'param3').to.be.a('string');
+      expect(param3, 'param3').to.equal(passParam3);
+      done();
+
+    }, passParam, passParam2, passParam3);
 
   });
 

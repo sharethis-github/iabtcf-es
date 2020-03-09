@@ -18,30 +18,6 @@ for (const arg of args) {
 
 }
 
-global.btoa = (str: string | Buffer): string => {
-
-  let buffer;
-
-  if (str instanceof Buffer) {
-
-    buffer = str;
-
-  } else {
-
-    buffer = Buffer.from(str.toString(), 'binary');
-
-  }
-
-  return buffer.toString('base64');
-
-};
-
-global.atob = (str: string): string => {
-
-  return Buffer.from(str, 'base64').toString('binary');
-
-};
-
 const print = (key: string | number, value: string | number | boolean | object | undefined, indent = 0): void => {
 
   const indentString = '  '.repeat(indent);
@@ -114,14 +90,14 @@ if (encoded) {
     print('publisherCountryCode', tcModel.publisherCountryCode);
     print('vendorListVersion', tcModel.vendorListVersion);
     print('purposeConsents', tcModel.purposeConsents);
-    print('purposeLegitimateInterest', tcModel.purposeLegitimateInterest);
+    print('purposeLegitimateInterests', tcModel.purposeLegitimateInterests);
     print('specialFeatureOptIns', tcModel.specialFeatureOptIns);
-    print('publisherLegitimateInterest', tcModel.publisherLegitimateInterest);
+    print('publisherLegitimateInterests', tcModel.publisherLegitimateInterests);
     print('publisherCustomConsents', tcModel.publisherCustomConsents);
     print('publisherConsents', tcModel.publisherConsents);
-    print('publisherCustomLegitimateInterest', tcModel.publisherCustomLegitimateInterest);
+    print('publisherCustomLegitimateInterests', tcModel.publisherCustomLegitimateInterests);
     print('vendorConsents', tcModel.vendorConsents);
-    print('vendorLegitimateInterest', tcModel.vendorLegitimateInterest);
+    print('vendorLegitimateInterests', tcModel.vendorLegitimateInterests);
     print('vendorsDisclosed', tcModel.vendorsDisclosed);
     print('vendorsAllowed', tcModel.vendorsAllowed);
 

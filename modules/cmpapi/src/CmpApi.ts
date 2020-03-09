@@ -2,8 +2,8 @@
 import {Callback, ErrorCallback} from './callback';
 import {CmpApiModel} from './CmpApiModel';
 import {CommandMap} from './command/CommandMap';
+import {DisabledCommand} from './command/DisabledCommand';
 import {CustomCommands} from './CustomCommands';
-import {PolyFill} from '@iabtcf/util';
 import {TCModel} from '@iabtcf/core';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -35,8 +35,6 @@ export class CmpApi {
    * @param {CustomCommands} customCommands
    */
   public constructor(cmpId: number, cmpVersion: number, customCommands?: CustomCommands) {
-
-    new PolyFill();
 
     this.throwIfInvalidInt(cmpId, 'cmpId', 2);
     this.throwIfInvalidInt(cmpVersion, 'cmpVersion', 0);
@@ -182,12 +180,12 @@ export class CmpApi {
 
   private wrapPageCallHandler(): PageCallHandler {
 
-    return (command: string, version: number, callback: Callback, param?: any): void => {
+    return (command: string, version: number, callback: Callback, ...params: any): void => {
 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const _this = this;
 
-      _this.pageCallHandler(command, version, callback, param);
+      _this.pageCallHandler(command, version, callback, ...params);
 
     };
 
@@ -200,7 +198,7 @@ export class CmpApi {
    * @param {CallbackFunction} callback
    * @param {any} [param]
    */
-  private pageCallHandler(command: string, version: number, callback: Callback, param?: any): void | never {
+  private pageCallHandler(command: string, version: number, callback: Callback, ...params: any): void | never {
 
     if (typeof command !== 'string') {
 
@@ -222,17 +220,25 @@ export class CmpApi {
 
     }
 
-    if (this.customCommands && this.customCommands[command]) {
+    if (!CmpApiModel.disabled) {
 
-      this.customCommands[command](callback, param);
+      if (this.customCommands && this.customCommands[command]) {
 
-    } else if (CommandMap[command]) {
+        this.customCommands[command](callback, ...params);
 
-      new CommandMap[command](callback, param);
+      } else if (CommandMap[command]) {
+
+        new CommandMap[command](callback, params[0]);
+
+      } else {
+
+        (callback as ErrorCallback)(`CmpApi does not support the "${command}" command`, false);
+
+      }
 
     } else {
 
-      (callback as ErrorCallback)(`CmpApi does not support the "${command}" command`, false);
+      new DisabledCommand(callback);
 
     }
 
